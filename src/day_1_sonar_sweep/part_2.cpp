@@ -4,7 +4,7 @@ using namespace std;
 
 int main(int argc, char** argv) {
     ifstream input;
-    input.open("./input.txt");
+    input.open(argv[1]);
 
     if (!input.is_open()) {
         exit(EXIT_FAILURE);
@@ -13,16 +13,16 @@ int main(int argc, char** argv) {
     size_t w_size = 3;
     string str;
 	int32_t prev = 0, counter = 0, curr, val, front;
-	deque<int32_t> w;
+	queue<int32_t> w;
     while (getline(input, str)) {
         val = atoi(str.c_str());
-		w.push_back(val);
+		w.push(val);
 		if (w.size() <= w_size) {
 			prev += val;
 			continue;
 		}
 		front = w.front();
-		w.pop_front();
+		w.pop();
 		curr = prev - front + val;
 		if (prev < curr) {
 			counter++;

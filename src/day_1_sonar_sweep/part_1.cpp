@@ -1,14 +1,10 @@
 #include <bits/stdc++.h>
-#include <unistd.h>
 
 using namespace std;
 
 int main(int argc, char** argv) {
     ifstream input;
-    string fpath = get_current_dir_name();
-    fpath.append("/input.txt");
-    cout << fpath << endl;
-    input.open(fpath);
+    input.open(argv[1]);
 
     if (!input.is_open()) {
         exit(EXIT_FAILURE);
