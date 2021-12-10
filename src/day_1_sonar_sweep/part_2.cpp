@@ -4,7 +4,7 @@ using namespace std;
 
 int main(int argc, char** argv) {
     ifstream input;
-    input.open(argv[1]);
+    input.open("./input.txt");
 
     if (!input.is_open()) {
         exit(EXIT_FAILURE);
