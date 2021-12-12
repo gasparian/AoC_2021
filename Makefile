@@ -2,8 +2,7 @@
 SHELL := /bin/sh
 .SILENT:
 .PHONY: \
-        compile-all \
-		compile
+        compile-all
 
 define compile_all_tasks = 
 for dir in ./src/*/
@@ -18,6 +17,3 @@ endef
 DEFAULT_GOAL := compile-all
 compile-all:
 	$(value compile_all_tasks)
-
-compile:
-	g++ -std=c++11 -O2 -Wall $$SRCPATH -o $${SRCPATH%.*}.o

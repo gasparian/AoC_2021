@@ -10,7 +10,7 @@ int main(int argc, char** argv) {
         exit(EXIT_FAILURE);
     }
 
-    size_t w_size = 3;
+    const size_t w_size = 3;
     string str;
 	int32_t prev = 0, counter = 0, curr, val, front;
 	queue<int32_t> w;
