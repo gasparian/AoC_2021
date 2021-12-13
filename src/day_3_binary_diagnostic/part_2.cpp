@@ -39,10 +39,10 @@ uint32_t get_rating(vector<int>& data, uint32_t bit_id, rating r) {
     return 0;
 }
 
-uint64_t get_life_support_rating(ifstream* input, uint32_t bit_len) {
+uint64_t get_life_support_rating(ifstream& input, uint32_t bit_len) {
     string line;
     vector<int32_t> data;
-    while (getline(*input, line)) {
+    while (getline(input, line)) {
 		data.push_back(stoi(line, 0, 2));
     }
     const uint32_t ox = get_rating(data, bit_len - 1, OX);
@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
     }
 
     const uint32_t bit_len = 12;
-    const uint64_t life_support_rating = get_life_support_rating(&input, bit_len);
+    const uint64_t life_support_rating = get_life_support_rating(input, bit_len);
     cout << life_support_rating << endl; // 5941884
     input.close();
 }
