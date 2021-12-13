@@ -2,7 +2,7 @@
 
 https://adventofcode.com/2021  
 
-List of my "unpurified" solutions.  
+List of my "unpolished" solutions.  
 
 GNU C++11  
 

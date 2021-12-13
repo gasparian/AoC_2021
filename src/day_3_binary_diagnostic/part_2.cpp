@@ -2,66 +2,41 @@
 
 using namespace std;
 
-struct stats {
-    uint32_t counter;
-    vector<uint32_t> starts_one_ids;
-    vector<uint32_t> starts_zero_ids;
+enum rating {
+    OX,
+    CO2,
 };
 
-stats get_data_stats(vector<int>& data, uint32_t bit_id) {
+uint32_t get_rating(vector<int>& data, uint32_t bit_id, rating r) {
+    if (data.size() == 1) {
+        return data[0];
+    }
 	uint32_t counter = 0;
     uint32_t is_non_zero;
-    vector<uint32_t> starts_one_ids, starts_zero_ids;
+    vector<int> starts_one, starts_zero;
     for (uint32_t i=0; i < data.size(); i++) {
         is_non_zero = data[i] & (1 << bit_id);
         if (is_non_zero) {
-            starts_one_ids.push_back(i);
+            starts_one.push_back(data[i]);
             counter++;
         } else {
-            starts_zero_ids.push_back(i);
+            starts_zero.push_back(data[i]);
         }
     }
-    return {
-        counter,
-        starts_one_ids,
-        starts_zero_ids,
-    };
-}
-
-uint32_t get_ox(vector<int>& data, uint32_t bit_id) {
-    if (data.size() == 1) {
-        return data[0];
-    }
-    stats data_stats = get_data_stats(data, bit_id);
-    vector<int> sub_set;
-    if (data_stats.counter >= (data.size() - data_stats.counter)) {
-        for (auto i : data_stats.starts_one_ids) {
-            sub_set.push_back(data[i]);
+    bool most_common_is_one = counter >= (data.size() - counter);
+    switch (r) {
+    case OX:
+        if (most_common_is_one) {
+            return get_rating(starts_one, --bit_id, r);
         }
-    } else {
-        for (auto i : data_stats.starts_zero_ids) {
-            sub_set.push_back(data[i]);
+        return get_rating(starts_zero, --bit_id, r);
+    case CO2:
+        if (most_common_is_one) {
+            return get_rating(starts_zero, --bit_id, r);
         }
+        return get_rating(starts_one, --bit_id, r);
     }
-    return get_ox(sub_set, --bit_id);
-}
-
-uint32_t get_co2(vector<int>& data, uint32_t bit_id) {
-    if (data.size() == 1) {
-        return data[0];
-    }
-    stats data_stats = get_data_stats(data, bit_id);
-    vector<int> sub_set;
-    if (data_stats.counter >= (data.size() - data_stats.counter)) {
-        for (auto i : data_stats.starts_zero_ids) {
-            sub_set.push_back(data[i]);
-        }
-    } else {
-        for (auto i : data_stats.starts_one_ids) {
-            sub_set.push_back(data[i]);
-        }
-    }
-    return get_co2(sub_set, --bit_id);
+    return 0;
 }
 
 uint64_t get_life_support_rating(ifstream* input, uint32_t bit_len) {
@@ -70,8 +45,8 @@ uint64_t get_life_support_rating(ifstream* input, uint32_t bit_len) {
     while (getline(*input, line)) {
 		data.push_back(stoi(line, 0, 2));
     }
-    const uint32_t ox = get_ox(data, bit_len - 1);
-    const uint32_t co2 = get_co2(data, bit_len - 1);
+    const uint32_t ox = get_rating(data, bit_len - 1, OX);
+    const uint32_t co2 = get_rating(data, bit_len - 1, CO2);
     return ox * co2;
 }
 
